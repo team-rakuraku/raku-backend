@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Component
@@ -29,16 +30,23 @@ public class JwtProvider {
 
     // access token 검증
     public boolean validateAccessToken(String accessToken) {
+        return Optional.ofNullable(accessToken)
+                .filter(token -> !token.trim().isEmpty())
+                .map(this::parseClaims)
+                .map(this::isTokenNotExpired)
+                .orElse(false);
+    }
+
+    private Jws<Claims> parseClaims(String accessToken) {
         try {
-            // token이 없는 경우 처리
-            if(accessToken == null || accessToken.trim().isEmpty()) {
-                return false;
-            }
-            Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken);
-            return !claims.getBody().getExpiration().before(new Date());
+            return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken);
         } catch (Exception e) {
-            return false;
+            return null;
         }
+    }
+
+    private boolean isTokenNotExpired(Jws<Claims> claims) {
+        return claims != null && !claims.getBody().getExpiration().before(new Date());
     }
 
     public Date GetExpiredDay(String accessToken) throws IllegalArgumentException {
