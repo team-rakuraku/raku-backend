@@ -6,6 +6,7 @@ import com.rakuraku.login.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +26,13 @@ public class UsersService {
 
     public GetUsersInfoDto getUsers(String uuid) throws Exception{
         Users users = usersRepository.findByUserId(uuid)
-                .orElseThrow(() -> new Exception("Account now found."));
+                .orElseThrow(() -> new Exception("Account not found."));
         return new GetUsersInfoDto(users);
     }
+
+    // 모든 사용자 목록을 반환하는 메서드
+    public List<Users> getAllUsers() {
+        return usersRepository.findAll();
+    }
+
 }
