@@ -1,9 +1,7 @@
 package com.rakuraku.login.service;
 
-import com.rakuraku.apps.repository.AppsRepository;
 import com.rakuraku.auth.JwtProvider;
 import com.rakuraku.login.dto.LoginDto;
-import com.rakuraku.login.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -40,6 +38,17 @@ public class TokenService {
             log.error("Token validation error: {}", e.getMessage());
             throw e; // 예외를 다시 던짐
         }
+    }
+
+    public String getSubjectFromToken(String token){
+        return jwtProvider.getSubjectFromToken(token);
+    }
+    // validate token + isSameSubandUuid
+    public boolean isValidatedAndSameSubAndUuid(String accessToken, String uuid){
+        if (validateAccessToken(accessToken)){
+            return getSubjectFromToken(accessToken.trim()).equals(uuid.trim());
+        }
+        return false;
     }
 
 }

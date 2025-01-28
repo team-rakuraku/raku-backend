@@ -1,5 +1,6 @@
-package com.rakuraku.stomp;
+package com.rakuraku.stomp.config;
 
+import com.rakuraku.auth.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;
@@ -13,14 +14,16 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @RequiredArgsConstructor
 public class StompConfig implements WebSocketMessageBrokerConfigurer {
     private final StompHandler stompHandler;
+    private final JwtProvider jwtProvider;
     /**
      * setAllowedOrignPatterns("*") CORS 설정 모두 허용
      * withSockJS을 통해 웹소켓을 지원하지 않는 브라우저는 sockJS를 사용하도록 -> 테스트 할 때만 주석
      * **/
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/chat").setAllowedOriginPatterns("*");
-//                .withSockJS();
+        registry.addEndpoint("/chat")
+                .setAllowedOriginPatterns("*")
+                .withSockJS();
     }
     /**
      * configureMessageBroker 메세지 브로커 설정을 위한 메소드
@@ -43,5 +46,6 @@ public class StompConfig implements WebSocketMessageBrokerConfigurer {
     public void configureClientInboundChannel(ChannelRegistration registration) {
         registration.interceptors(stompHandler);
     }
+
 
 }

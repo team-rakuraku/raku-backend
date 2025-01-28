@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 public class ChatRooms {
+    // single, group이라 나눌 필요가 있나? topic, queue로 나누면 되는 거 아닌가?
     public enum Type{
         GROUP, SINGLE
     }
