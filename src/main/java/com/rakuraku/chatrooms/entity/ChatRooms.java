@@ -47,4 +47,12 @@ public class ChatRooms {
         this.createdAt = createdAt;
         this.count = count;
     }
+
+    public void minusPerson(){
+        this.count--;
+    }
+
+    public void addPerson(){
+        this.count++;
+    }
 }
