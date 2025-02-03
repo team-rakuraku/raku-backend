@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -33,6 +34,7 @@ public class ChatRoomsService {
     private final SimpMessagingTemplate messagingTemplate;
     private final UserChatRoomsService userChatRoomsService;
 
+    @Transactional
     // 방 생성
     public boolean createChatRooms(String token, String appId, CreateRoomRequest createRoomRequest) {
         // JWT 토큰 검증
@@ -47,29 +49,32 @@ public class ChatRoomsService {
         addUserToChatRoom(createRoomRequest.getUserId(), chatRoom, UserChatRooms.Role.ADMIN);
 
         // 초대된 사용자 추가 및 메시지 전송
-        for (String invitedUserId : createRoomRequest.getInvitedUserIds()) {
-            addUserToChatRoom(invitedUserId, chatRoom, UserChatRooms.Role.MEMBER);
-            sendChatRoomToUser(chatRoom, invitedUserId);
-        }
+//        for (String invitedUserId : createRoomRequest.getInvitedUserIds()) {
+//            addUserToChatRoom(invitedUserId, chatRoom, UserChatRooms.Role.MEMBER);
+//            sendChatRoomToUser(chatRoom, invitedUserId);
+//        }
+        // 소켓으로 생성됐다고 알려주기
+        sendChatRoomToUser(chatRoom);
 
         return true;
     }
-
-    private ChatRooms createChatRoom(String appId, CreateRoomRequest createRoomRequest) {
+    @Transactional
+    public ChatRooms createChatRoom(String appId, CreateRoomRequest createRoomRequest) {
         Apps apps = appsRepository.findByAppId(appId)
                 .orElseThrow(() -> new RuntimeException("Apps not found"));
 
         ChatRooms chatRoom = ChatRooms.builder()
                 .name(createRoomRequest.getName())
                 .appId(apps)
+                .count(1)
                 .type(createRoomRequest.getType())
                 .createdAt(LocalDateTime.now())
                 .build();
 
         return chatRoomsRepository.save(chatRoom);
     }
-
-    private void addUserToChatRoom(String userId, ChatRooms chatRoom, UserChatRooms.Role role) {
+    @Transactional
+    public void addUserToChatRoom(String userId, ChatRooms chatRoom, UserChatRooms.Role role) {
         Users user = usersRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -83,11 +88,12 @@ public class ChatRoomsService {
         userChatRoomsRepository.save(userChatRoom);
     }
 
-    private void sendChatRoomToUser(ChatRooms chatRoom, String invitedUserId) {
-        log.info("Sending chat room: {} to {}", chatRoom.getName(), invitedUserId);
-        messagingTemplate.convertAndSend("/topic/chatroom/" + invitedUserId, chatRoom);
+    private void sendChatRoomToUser(ChatRooms chatRoom) {
+        log.info("Sending chat room: {}", chatRoom.getName());
+        messagingTemplate.convertAndSend("/topic/chatroom/", chatRoom);
     }
-
+    // 유저 리스트
+    @Transactional
     public List<ChatRooms> getUserChatRooms(String userId){
         Users users = usersRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("User account not found"));

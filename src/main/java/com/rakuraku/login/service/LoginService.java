@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 
 // 로그인과 관련된 코드들을 정리하는 서비스단
 @Slf4j
@@ -34,6 +36,7 @@ public class LoginService {
                     .appId(app)
                     .profileImage(requestDto.getProfileImageUrl())
                     .nickname(requestDto.getNickname())
+                    .createdAt(LocalDateTime.now())
                     .userId(requestDto.getUserId())
                     .build();
             usersRepository.save(users);
