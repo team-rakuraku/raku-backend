@@ -36,11 +36,23 @@ public class ChatRooms {
     @Column(name = "createdAt")
     private LocalDateTime createdAt;
 
+    @Column(name = "count")
+    private Integer count;
+
     @Builder
-    public ChatRooms(Apps appId, String name, Type type, LocalDateTime createdAt){
+    public ChatRooms(Apps appId, String name, Type type, LocalDateTime createdAt, Integer count){
         this.appId = appId;
         this.name = name;
         this.type = type;
         this.createdAt = createdAt;
+        this.count = count;
+    }
+
+    public void minusPerson(){
+        this.count--;
+    }
+
+    public void addPerson(){
+        this.count++;
     }
 }
