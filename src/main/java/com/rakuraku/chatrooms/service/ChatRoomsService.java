@@ -9,7 +9,6 @@ import com.rakuraku.login.entity.Users;
 import com.rakuraku.login.repository.UsersRepository;
 import com.rakuraku.login.service.TokenService;
 import com.rakuraku.login.service.UsersService;
-import com.rakuraku.stomp.repository.ChatRoomRepository;
 import com.rakuraku.user_chat_rooms.entity.UserChatRooms;
 import com.rakuraku.user_chat_rooms.repository.UserChatRoomsRepository;
 import com.rakuraku.user_chat_rooms.service.UserChatRoomsService;
@@ -49,11 +48,6 @@ public class ChatRoomsService {
         // 사용자를 채팅방에 추가
         addUserToChatRoom(createRoomRequest.getUserId(), chatRoom, UserChatRooms.Role.ADMIN);
 
-        // 초대된 사용자 추가 및 메시지 전송
-//        for (String invitedUserId : createRoomRequest.getInvitedUserIds()) {
-//            addUserToChatRoom(invitedUserId, chatRoom, UserChatRooms.Role.MEMBER);
-//            sendChatRoomToUser(chatRoom, invitedUserId);
-//        }
         // 소켓으로 생성됐다고 알려주기
         sendChatRoomToUser(chatRoom);
 
@@ -130,16 +124,9 @@ public class ChatRoomsService {
         chatRoom.addPerson();
         // 데이터베이스에 변경된 채팅방 저장
         chatRoomsRepository.save(chatRoom);
-        // 소켓으로 입장 메시지 전송
-//        sendUserEnteredMessage(chatRoom, userId);
 
         return true;
     }
-
-//    private void sendUserEnteredMessage(ChatRooms chatRoom, String userId) {
-//        log.info("User {} entered chat room: {}", userId, chatRoom.getName());
-//        messagingTemplate.convertAndSend("/topic/chatroom/" + chatRoom.getId(), userId + " has entered the chat room.");
-//    }
 
 
     @Transactional
@@ -164,13 +151,10 @@ public class ChatRoomsService {
         // 데이터베이스에 변경된 채팅방 저장
         chatRoomsRepository.save(chatRoom);
 
-        // 소켓으로 나간 메시지 전송
-//        sendUserLeftMessage(chatRoom, userId);
 
         return true;
     }
-//    private void sendUserLeftMessage(ChatRooms chatRoom, String userId) {
-//        log.info("User {} left chat room: {}", userId, chatRoom.getName());
-//        messagingTemplate.convertAndSend("/topic/chatroom/" + chatRoom.getId(), userId + " has left the chat room.");
+//    public List<Object> getRoomList(){
+//        return chatRoomsRepository.findAll();
 //    }
 }

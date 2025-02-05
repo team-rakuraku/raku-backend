@@ -1,8 +1,8 @@
 package com.rakuraku.stomp.dto;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+
+import java.time.LocalDateTime;
 
 @Getter
 @ToString
@@ -10,7 +10,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChatMessage {
+public class RequestChatMessage {
     private String appId;
     private String usersId;
     private String content;
