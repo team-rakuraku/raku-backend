@@ -2,7 +2,11 @@ package com.rakuraku.stomp.config;
 
 import com.rakuraku.auth.JwtProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.listener.PatternTopic;
+import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
@@ -15,6 +19,7 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 public class StompConfig implements WebSocketMessageBrokerConfigurer {
     private final StompHandler stompHandler;
     private final JwtProvider jwtProvider;
+
     /**
      * setAllowedOrignPatterns("*") CORS 설정 모두 허용
      * withSockJS을 통해 웹소켓을 지원하지 않는 브라우저는 sockJS를 사용하도록 -> 테스트 할 때만 주석
@@ -37,7 +42,7 @@ public class StompConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
         // 메세지를 구독하는 요청 url => 메세지를 받을 때
-        registry.enableSimpleBroker("/queue", "/topic");
+//        registry.enableSimpleBroker("/queue", "/topic");
         // 메세지를 발행하는 요청 url => 메세지 보낼 때
         registry.setApplicationDestinationPrefixes("/app");
     }

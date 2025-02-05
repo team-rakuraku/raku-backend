@@ -9,6 +9,7 @@ import com.rakuraku.login.entity.Users;
 import com.rakuraku.login.repository.UsersRepository;
 import com.rakuraku.login.service.TokenService;
 import com.rakuraku.login.service.UsersService;
+import com.rakuraku.stomp.repository.ChatRoomRepository;
 import com.rakuraku.user_chat_rooms.entity.UserChatRooms;
 import com.rakuraku.user_chat_rooms.repository.UserChatRoomsRepository;
 import com.rakuraku.user_chat_rooms.service.UserChatRoomsService;
