@@ -9,6 +9,10 @@ import com.rakuraku.login.entity.Users;
 import com.rakuraku.login.repository.UsersRepository;
 import com.rakuraku.login.service.TokenService;
 import com.rakuraku.login.service.UsersService;
+import com.rakuraku.messages.dto.ChatMessage;
+import com.rakuraku.stomp.dto.MongoMessage;
+import com.rakuraku.stomp.repository.ChatRepository;
+import com.rakuraku.stomp.service.ChatService;
 import com.rakuraku.user_chat_rooms.entity.UserChatRooms;
 import com.rakuraku.user_chat_rooms.repository.UserChatRoomsRepository;
 import com.rakuraku.user_chat_rooms.service.UserChatRoomsService;
@@ -33,6 +37,7 @@ public class ChatRoomsService {
     private final UsersService usersService;
     private final SimpMessagingTemplate messagingTemplate;
     private final UserChatRoomsService userChatRoomsService;
+    private final ChatService chatService;
 
     @Transactional
     // 방 생성
@@ -62,7 +67,6 @@ public class ChatRoomsService {
                 .name(createRoomRequest.getName())
                 .appId(apps)
                 .count(1)
-                .type(createRoomRequest.getType())
                 .createdAt(LocalDateTime.now())
                 .build();
 
@@ -125,6 +129,7 @@ public class ChatRoomsService {
         // 데이터베이스에 변경된 채팅방 저장
         chatRoomsRepository.save(chatRoom);
 
+
         return true;
     }
 
@@ -154,7 +159,7 @@ public class ChatRoomsService {
 
         return true;
     }
-//    public List<Object> getRoomList(){
-//        return chatRoomsRepository.findAll();
-//    }
+    public List<ChatRooms> getRoomList(){
+        return chatRoomsRepository.findAll();
+    }
 }

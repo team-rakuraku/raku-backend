@@ -1,13 +1,12 @@
 package com.rakuraku.chatrooms.controller;
 
 import com.rakuraku.chatrooms.dto.CreateRoomRequest;
-import com.rakuraku.chatrooms.dto.GetUserChatRoomsResponseDto;
-import com.rakuraku.chatrooms.dto.GetUserIdRequestDto;
 import com.rakuraku.chatrooms.dto.enterLeaveRequestDto;
-import com.rakuraku.chatrooms.entity.ChatRooms;
 import com.rakuraku.chatrooms.service.ChatRoomsService;
 import com.rakuraku.global.ResponseDto;
 import com.rakuraku.login.service.UsersService;
+import com.rakuraku.stomp.dto.MongoMessage;
+import com.rakuraku.stomp.service.ChatService;
 import com.rakuraku.user_chat_rooms.service.UserChatRoomsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 
 @Slf4j
 @RestController
@@ -28,6 +28,7 @@ public class ChatRoomsController {
     private final UserChatRoomsService userChatRoomsService;
     private final ChatRoomsService chatRoomsService;
     private final UsersService usersService;
+    private final ChatService chatService;
 
     @PostMapping()
     public ResponseEntity<Object> createChatRooms(@RequestHeader("Authorization") String token, @RequestHeader("App-Id") String appId, @RequestBody CreateRoomRequest createRoomRequest){
@@ -46,8 +47,6 @@ public class ChatRoomsController {
         }
     }
 
-
-
     // 입장
     @PostMapping("/enter/{room_id}")
     public ResponseEntity<Object> enterUserChatRooms(@RequestHeader("Authorization") String token,
@@ -56,9 +55,12 @@ public class ChatRoomsController {
                                                      @RequestBody enterLeaveRequestDto enterRequestDto){
         try {
             boolean success = chatRoomsService.enterUser(token,appId,enterRequestDto.getUserId(),room_id);
+            // 채팅방의 메시지 정보 가져오기
+            List<MongoMessage> mongoMessages = chatService.getMongoMessageByRoomId(String.valueOf(room_id));
+
             if (success){
                 return ResponseEntity.status(HttpStatus.OK)
-                        .body(ResponseDto.response(HttpStatus.OK, "user has entered the chat room successfully."));
+                        .body(mongoMessages);
             }else{
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body(ResponseDto.response(HttpStatus.BAD_REQUEST, "채팅방 입장 실패", null));
@@ -83,6 +85,17 @@ public class ChatRoomsController {
                 return ResponseEntity.status(HttpStatus.OK)
                         .body(ResponseDto.response(HttpStatus.OK, String.format("%s 유저가 %s 방에서 나가는 거 실패.", leaveRequestDto.getUserId() ,room_id)));
             }
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(ResponseDto.response(HttpStatus.BAD_REQUEST, e.getMessage(), null));
+        }
+    }
+    // 채팅방 리스트
+    @GetMapping()
+    public ResponseEntity<Object> getChatRoomList(){
+        try {
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(ResponseDto.response(HttpStatus.OK, "방 목록 가져오기 성공", chatRoomsService.getRoomList()));
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(ResponseDto.response(HttpStatus.BAD_REQUEST, e.getMessage(), null));

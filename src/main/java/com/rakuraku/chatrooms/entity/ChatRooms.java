@@ -13,10 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 public class ChatRooms {
-    // single, group이라 나눌 필요가 있나? topic, queue로 나누면 되는 거 아닌가?
-    public enum Type{
-        GROUP, SINGLE
-    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "roomId")
@@ -29,9 +26,6 @@ public class ChatRooms {
     @Column(name = "name")
     private String name;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "type")
-    private Type type;
 
     @Column(name = "createdAt")
     private LocalDateTime createdAt;
@@ -40,10 +34,9 @@ public class ChatRooms {
     private Integer count;
 
     @Builder
-    public ChatRooms(Apps appId, String name, Type type, LocalDateTime createdAt, Integer count){
+    public ChatRooms(Apps appId, String name,  LocalDateTime createdAt, Integer count){
         this.appId = appId;
         this.name = name;
-        this.type = type;
         this.createdAt = createdAt;
         this.count = count;
     }
