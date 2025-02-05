@@ -46,19 +46,7 @@ public class ChatRoomsController {
         }
     }
 
-    // user에 넣을지... 어디에 넣을 지 고민이다.
-    @PostMapping("/user")
-    public ResponseEntity<Object> getUserChatRooms(@RequestBody GetUserIdRequestDto userIdRequestDto){
-        try {
-            log.info(userIdRequestDto.getUserId());
-            List<ChatRooms> chatRoomsList = chatRoomsService.getUserChatRooms(userIdRequestDto.getUserId());
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(GetUserChatRoomsResponseDto.response(HttpStatus.OK, "유저 정보에 맞는 방 정보들 불러오기 성공", chatRoomsList));
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(ResponseDto.response(HttpStatus.BAD_REQUEST, e.getMessage(), null));
-        }
-    }
+
 
     // 입장
     @PostMapping("/enter/{room_id}")
