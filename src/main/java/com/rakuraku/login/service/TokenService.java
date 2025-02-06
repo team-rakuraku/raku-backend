@@ -1,6 +1,6 @@
 package com.rakuraku.login.service;
 
-import com.rakuraku.auth.JwtProvider;
+import com.rakuraku.login.auth.JwtProvider;
 import com.rakuraku.login.dto.LoginDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

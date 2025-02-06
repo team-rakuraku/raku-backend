@@ -1,6 +1,4 @@
 package com.rakuraku.login.controller;
-import com.rakuraku.apps.repository.AppsRepository;
-import com.rakuraku.auth.JwtProvider;
 import com.rakuraku.global.ResponseDto;
 import com.rakuraku.login.dto.LoginDto;
 import com.rakuraku.login.dto.LoginResponseDto;

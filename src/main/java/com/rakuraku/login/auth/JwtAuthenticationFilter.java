@@ -1,4 +1,4 @@
-package com.rakuraku.auth;
+package com.rakuraku.login.auth;
 
 //import org.springframework.security.core.Authentication;
 //import org.springframework.security.core.context.SecurityContextHolder;
