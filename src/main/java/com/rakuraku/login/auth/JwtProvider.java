@@ -1,4 +1,4 @@
-package com.rakuraku.auth;
+package com.rakuraku.login.auth;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;

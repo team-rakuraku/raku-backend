@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +34,11 @@ public class UsersService {
     // 모든 사용자 목록을 반환하는 메서드
     public List<Users> getAllUsers() {
         return usersRepository.findAll();
+    }
+
+    // 유저가 존재하는지 반환
+    public Optional<Users> getUserInfo(String userId) {
+        return usersRepository.findByUserId(userId);
     }
 
 }
