@@ -1,1 +1,1 @@
-jenkins argocd deploy test
+jenkins argocd deploy test and docker version
