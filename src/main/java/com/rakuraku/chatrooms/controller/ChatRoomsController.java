@@ -126,10 +126,13 @@ public class ChatRoomsController {
 
     // 채팅 내용 불러오기
     @GetMapping("/detail/{room_id}")
-    public ResponseEntity<Object> getChatInDetail(@PathVariable(name = "room_id") Long roomId){
+    public ResponseEntity<Object> getChatInDetail(@PathVariable(name = "room_id") Long roomId,
+                                                  @RequestParam int page,
+                                                  @RequestParam(defaultValue = "100") int size){
         try {
+            Pageable pageable = PageRequest.of(page, size);
             return ResponseEntity.status(HttpStatus.OK)
-                    .body(ResponseDto.response(HttpStatus.OK, "채팅 목록 가져오기 성공", chatService.getMongoMessageByRoomId(String.valueOf(roomId))));
+                    .body(ResponseDto.response(HttpStatus.OK, "채팅 목록 가져오기 성공", chatService.getMongoMessageByRoomId(String.valueOf(roomId),pageable)));
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(ResponseDto.response(HttpStatus.BAD_REQUEST, e.getMessage(), null));
