@@ -31,6 +31,7 @@ public class ChatController {
                     .content(message.getContent())
                     .userId(message.getUsersId())
                     .appId(message.getAppId())
+                    .roomId(message.getRoomId())
                     .time(new Date())
                     .build();
             chatRepository.save(mongoMessage);
