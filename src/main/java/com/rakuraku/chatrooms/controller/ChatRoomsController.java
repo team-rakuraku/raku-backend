@@ -97,7 +97,7 @@ public class ChatRoomsController {
     }
     // 채팅방 리스트
     @GetMapping()
-    public ResponseEntity<Object> getChatRoomList(@RequestParam int page, @RequestParam int size){
+    public ResponseEntity<Object> getChatRoomList(@RequestParam int page, @RequestParam(defaultValue = "10") int size){
         try {
             Pageable pageable = PageRequest.of(page,size);
             return ResponseEntity.status(HttpStatus.OK)
