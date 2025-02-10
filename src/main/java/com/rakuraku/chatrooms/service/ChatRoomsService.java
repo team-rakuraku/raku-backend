@@ -18,6 +18,10 @@ import com.rakuraku.user_chat_rooms.repository.UserChatRoomsRepository;
 import com.rakuraku.user_chat_rooms.service.UserChatRoomsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -159,7 +163,10 @@ public class ChatRoomsService {
 
         return true;
     }
-    public List<ChatRooms> getRoomList(){
-        return chatRoomsRepository.findAll();
+
+    @Transactional(readOnly = true)
+    public Page<ChatRooms> getRoomList(Pageable pageable){
+        Page<ChatRooms> chatRooms = chatRoomsRepository.findAllByOrderByCreatedAtDesc(pageable);
+        return chatRooms;
     }
 }

@@ -14,6 +14,8 @@ import com.rakuraku.user_chat_rooms.entity.UserChatRooms;
 import com.rakuraku.user_chat_rooms.service.UserChatRoomsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -95,10 +97,11 @@ public class ChatRoomsController {
     }
     // 채팅방 리스트
     @GetMapping()
-    public ResponseEntity<Object> getChatRoomList(){
+    public ResponseEntity<Object> getChatRoomList(@RequestParam int page, @RequestParam int size){
         try {
+            Pageable pageable = PageRequest.of(page,size);
             return ResponseEntity.status(HttpStatus.OK)
-                    .body(ResponseDto.response(HttpStatus.OK, "방 목록 가져오기 성공", chatRoomsService.getRoomList()));
+                    .body(ResponseDto.response(HttpStatus.OK, "방 목록 가져오기 성공", chatRoomsService.getRoomList(pageable)));
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(ResponseDto.response(HttpStatus.BAD_REQUEST, e.getMessage(), null));
