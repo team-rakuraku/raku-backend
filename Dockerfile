@@ -13,4 +13,3 @@ RUN chmod +x /app/setup-ssh.sh
 
 # 실행 명령어
 ENTRYPOINT ["/bin/sh", "-c", "/app/setup-ssh.sh && java -jar /app.jar"]
-
