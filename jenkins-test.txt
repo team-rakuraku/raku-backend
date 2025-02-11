@@ -1,1 +1,1 @@
-jenkins argocd deploy test and docker version commitsha-buildnumber
+total CICD pipeline test
