@@ -5,7 +5,8 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y openssh-client
 
 # JAR 파일 복사 (올바른 방식)
-COPY build/libs/*.jar app.jar
+ARG JAR_FILE=build/libs/rakuraku-0.0.1-SNAPSHOT.jar
+COPY ${JAR_FILE} /app.jar
 
 # MongoDB SSH 연결 (EC2 SSH 접속 & 포트 포워딩)
 COPY src/main/resources/setup-ssh.sh /app/setup-ssh.sh
