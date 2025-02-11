@@ -2,6 +2,8 @@ FROM openjdk:11-jdk-slim
 
 WORKDIR /app
 
+RUN apt-get update && apt-get install -y openssh-client && rm -rf /var/lib/apt/lists/*
+
 # JAR 파일 복사 (올바른 방식)
 COPY build/libs/*.jar app.jar
 
