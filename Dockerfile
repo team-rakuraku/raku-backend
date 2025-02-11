@@ -17,7 +17,7 @@ RUN apt-get update && apt-get install -y wget gnupg curl \
     && rm -rf /var/lib/apt/lists/*
 
 # MongoDB SSH 연결 (EC2 SSH 접속 & 포트 포워딩)
-COPY setup-ssh.sh /app/setup-ssh.sh
+COPY /home/ec2-user/raku-backend/src/main/resources/setup-ssh.sh /app/setup-ssh.sh
 RUN chmod +x /app/setup-ssh.sh
 
 # 실행 명령어
