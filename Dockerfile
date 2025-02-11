@@ -3,7 +3,7 @@ FROM openjdk:11-jdk-slim
 WORKDIR /app
 
 # JAR 파일 복사 (정확한 JAR 파일명 사용)
-ARG JAR_FILE=build/libs/app.jar
+ARG JAR_FILE=build/libs/*.jar
 COPY ${JAR_FILE} app.jar
 
 # application.properties 복사
