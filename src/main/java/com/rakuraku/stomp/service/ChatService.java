@@ -28,6 +28,7 @@ public class ChatService {
                 .appId(message.getAppId())
                 .roomId(message.getRoomId())
                 .time(new Date())
+                .cloudFrontImageURL(message.getCloudFrontImageURL() != null ? message.getCloudFrontImageURL() : "")
                 .build();
 
         chatRepository.save(mongoMessage);

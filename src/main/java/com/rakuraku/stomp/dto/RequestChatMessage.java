@@ -15,6 +15,7 @@ public class RequestChatMessage {
     private String usersId;
     private String content;
     private String roomId;
+    private String cloudFrontImageURL;
     private Type type;
     public enum Type {
         ENTER, CHAT, LEAVE;

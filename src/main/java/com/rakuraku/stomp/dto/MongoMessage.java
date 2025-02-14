@@ -21,4 +21,5 @@ public class MongoMessage {
     private String content;
     private Date time;
     private String appId;
+    private String cloudFrontImageURL = "null";
 }
