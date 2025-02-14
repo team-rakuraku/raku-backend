@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
@@ -17,6 +18,7 @@ public class StompConfig implements WebSocketMessageBrokerConfigurer {
     private final JwtProvider jwtProvider;
 
     /**
+     * 웹소켓 핸드쉐이크 커넥션을 생성할 경로
      * setAllowedOrignPatterns("*") CORS 설정 모두 허용
      * withSockJS을 통해 웹소켓을 지원하지 않는 브라우저는 sockJS를 사용하도록 -> 테스트 할 때만 주석
      * **/
@@ -37,9 +39,21 @@ public class StompConfig implements WebSocketMessageBrokerConfigurer {
      * **/
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        // 메세지를 구독하는 요청 url => 메세지를 받을 때
-        registry.enableSimpleBroker("/queue", "/topic");
-        // 메세지를 발행하는 요청 url => 메세지 보낼 때
+//        // 메세지를 구독하는 요청 url => 메세지를 받을 때
+//        registry.enableSimpleBroker("/queue", "/topic");
+//        // 메세지를 발행하는 요청 url => 메세지 보낼 때
+//        registry.setApplicationDestinationPrefixes("/app");
+        // 메시지 브로커 설정
+        registry.setPathMatcher(new AntPathMatcher(".")); // url을 chat/room/3 -> chat.room.3으로 참조하기 위한 설정
+
+        registry.enableStompBrokerRelay("/queue", "/topic", "/exchange", "/amq/queue")
+                .setRelayHost("localhost")
+                .setVirtualHost("/")
+                .setRelayPort(61613)
+                .setClientLogin("guest")
+                .setClientPasscode("guest");
+//                .setSystemHeartbeatReceiveInterval(10000)
+//                .setSystemHeartbeatSendInterval(10000)
         registry.setApplicationDestinationPrefixes("/app");
     }
 
