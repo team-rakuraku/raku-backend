@@ -2,6 +2,7 @@ package com.rakuraku.stomp.config;
 
 import com.rakuraku.login.auth.JwtProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
@@ -16,6 +17,10 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 public class StompConfig implements WebSocketMessageBrokerConfigurer {
     private final StompHandler stompHandler;
     private final JwtProvider jwtProvider;
+    @Value("${rabbitmq.chat-queue.name}") String CHAT_QUEUE_NAME;
+    @Value("${rabbitmq.chat-exchange.name}") String CHAT_EXCHANGE_NAME;
+    @Value("${rabbitmq.chat-routing.key}") String CHAT_ROUTING_KEY;
+    @Value("${spring.rabbitmq.host}") String RABBITMQ_HOST;
 
     /**
      * 웹소켓 핸드쉐이크 커넥션을 생성할 경로
@@ -47,7 +52,7 @@ public class StompConfig implements WebSocketMessageBrokerConfigurer {
         registry.setPathMatcher(new AntPathMatcher(".")); // url을 chat/room/3 -> chat.room.3으로 참조하기 위한 설정
 
         registry.enableStompBrokerRelay("/queue", "/topic", "/exchange", "/amq/queue")
-                .setRelayHost("localhost")
+                .setRelayHost(RABBITMQ_HOST)
                 .setVirtualHost("/")
                 .setRelayPort(61613)
                 .setClientLogin("guest")
