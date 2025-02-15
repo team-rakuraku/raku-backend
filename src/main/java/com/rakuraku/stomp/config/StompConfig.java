@@ -16,7 +16,7 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @RequiredArgsConstructor
 public class StompConfig implements WebSocketMessageBrokerConfigurer {
     private final StompHandler stompHandler;
-    private final JwtProvider jwtProvider;
+
     @Value("${rabbitmq.chat-queue.name}") String CHAT_QUEUE_NAME;
     @Value("${rabbitmq.chat-exchange.name}") String CHAT_EXCHANGE_NAME;
     @Value("${rabbitmq.chat-routing.key}") String CHAT_ROUTING_KEY;
